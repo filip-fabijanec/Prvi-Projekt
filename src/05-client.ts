@@ -1,5 +1,6 @@
 import express from 'express';
 import path from 'path'
+import process from 'process';
 const app = express();
 
 app.set("views", path.join(import.meta.dirname, "views"));
@@ -12,7 +13,7 @@ app.get('/', function (req, res) {
 
 
 const hostname = '127.0.0.1';
-const port = 4072;
+const port = process.env.PORT || 10000;
 app.listen(port, hostname, () => {
   console.log(`SPA hosted at http://${hostname}:${port}/`);
 });
