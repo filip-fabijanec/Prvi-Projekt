@@ -29,7 +29,7 @@ const config = {
   },
   authorizationParams: {
     response_type: 'code',
-    audience: 'FER Web App',
+    audience: 'https://fer-web-api',
     // offline_access is needed to get the refresh token ("Allow Offline Access" must be enabled for the API in Auth0)
     scope: 'openid profile email offline_access',
   },
