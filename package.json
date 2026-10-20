@@ -12,16 +12,19 @@
   "dependencies": {
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
-    "dotenv": "^18.0.5",
+    "dotenv": "^18.0.8",
     "express": "^5.2.1",
+    "express-oauth2-jwt-bearer": "^1.11.0",
+    "express-openid-connect": "^3.4.0",
     "pug": "^3.0.4"
   },
   "devDependencies": {
-    "@types/node": "^24.0.0",
     "@types/cookie-parser": "^1.4.10",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
+    "@types/node": "^24.19.2",
     "concurrently": "^10.0.5",
-    "shx": "^0.4.0"
+    "shx": "^0.4.0",
+    "typescript": "^7.0.2"
   }
 }
