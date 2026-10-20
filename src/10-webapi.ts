@@ -34,7 +34,7 @@ app.get('/protected',  async function (req, res) {
   }
 });
 
-const hostname = process.env.HOSTNAME || '127.0.0.1';
+const hostname = '0.0.0.0';
 const port = Number(process.env.PORT) || 4101;
 app.listen(port, hostname, () => {
   console.log(`Web API running at http://${hostname}:${port}/`);

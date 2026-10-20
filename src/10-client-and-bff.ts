@@ -12,7 +12,7 @@ app.set('view engine', 'pug');
 app.use(express.static(path.join(import.meta.dirname, "public"))); //css and js are served as separate files (not included in pug)
 
 const port = Number(process.env.PORT) || 4102;
-const hostname = process.env.HOSTNAME || 'localhost'; // must match the callback URL registered in Auth0
+const hostname = '0.0.0.0'; // must match the callback URL registered in Auth0
 const webApiUri = process.env.WEB_API_URI || 'http://127.0.0.1:4101';
 
 const config = {
