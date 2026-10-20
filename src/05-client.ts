@@ -13,7 +13,7 @@ app.get('/', function (req, res) {
 
 
 const hostname = '127.0.0.1';
-const port = process.env.PORT || 10000;
+const port = Number(process.env.PORT) || 10000;
 app.listen(port, hostname, () => {
   console.log(`SPA hosted at http://${hostname}:${port}/`);
 });
