@@ -4,6 +4,8 @@ import oidc from 'express-openid-connect';
 const { auth } = oidc;
 import dotenv from 'dotenv'
 import process from 'process';
+import { MongoClient } from 'mongodb';
+import { randomUUID } from 'crypto';
 dotenv.config()
 
 const app = express();
@@ -15,6 +17,12 @@ app.use(express.static(path.join(import.meta.dirname, "public"))); //css and js 
 const port = Number(process.env.PORT) || 4102;
 const hostname = '0.0.0.0'; // must match the callback URL registered in Auth0
 const webApiUri = process.env.WEB_API_URI || 'http://127.0.0.1:4101';
+
+const client = new MongoClient(process.env.MONGODB_URI!);
+await client.connect();
+const passes = client.db('passes').collection('passes');
+
+
 
 const config = {
   authRequired: false,
@@ -41,12 +49,14 @@ app.use(auth(config));
 // (otherwise any page could log the user out with a link or redirect - logout CSRF)
 app.post('/logout', (req, res) => res.oidc.logout());
 
-app.get('/', function (req, res) {
+app.get('/', async function (req, res) {
+  const total = await passes.countDocuments();
+  const active = await passes.countDocuments({ status: 'ACTIVE' });
   let username: string | undefined;
   if (req.oidc.isAuthenticated()) {
     username = req.oidc.user?.name ?? req.oidc.user?.sub;
   }
-  res.render('index', { username });
+  res.render('index', { username, total, active });
 });
 
 

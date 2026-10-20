@@ -16,6 +16,7 @@
     "express": "^5.2.1",
     "express-oauth2-jwt-bearer": "^1.11.0",
     "express-openid-connect": "^3.4.0",
+    "mongodb": "^7.7.0",
     "pug": "^3.0.4"
   },
   "devDependencies": {
