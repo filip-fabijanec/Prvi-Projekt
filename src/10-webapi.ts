@@ -1,5 +1,6 @@
 import express from 'express'
 import { auth } from 'express-oauth2-jwt-bearer'; //claimCheck, requireScope, ...
+import process from 'process';
 
 const app = express();
 // app.use(cors()) is not needed because the incoming requests are issued from the BFF server side
@@ -33,8 +34,8 @@ app.get('/protected',  async function (req, res) {
   }
 });
 
-const hostname = '127.0.0.1';
-const port = 4101;
+const hostname = process.env.HOSTNAME || '127.0.0.1';
+const port = Number(process.env.PORT) || 4101;
 app.listen(port, hostname, () => {
   console.log(`Web API running at http://${hostname}:${port}/`);
 });
