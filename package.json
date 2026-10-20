@@ -6,8 +6,8 @@
     "copy-views": "shx cp -r src/views/ dist",
     "copy-public": "shx cp -r src/public/ dist/public",
     "start": "concurrently --kill-others \"npm:client\" \"npm:web-service\"",
-    "client": "node dist/05-client.js",
-    "web-service": "node dist/05-cookie-auth-cors.js"
+    "client": "node dist/10-client-and-bff.js",
+    "web-service": "node dist/10-webapi.js"
   },
   "dependencies": {
     "cookie-parser": "^1.4.7",
