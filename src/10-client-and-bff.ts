@@ -18,7 +18,7 @@ const webApiUri = process.env.WEB_API_URI || 'http://127.0.0.1:4101';
 const config = {
   authRequired: false,
   idpLogout: true, //logout not only from the app, but also from identity provider
-  secret: process.env.SECRET,
+  secret: process.env.SESSION_SECRET,
   baseURL: `https://prvi-projekt.onrender.com`,
   clientID: process.env.CLIENT_ID,
   issuerBaseURL: 'https://fer-web2.eu.auth0.com',
