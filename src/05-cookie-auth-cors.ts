@@ -1,6 +1,7 @@
 import * as auth from './05-auth-middleware.ts';
 import cors from 'cors';
 import express from 'express';
+import process from 'process';
 
 const app = express();
 app.use(cors({credentials: true, origin: 'http://127.0.0.1:4072'}));
@@ -50,8 +51,8 @@ app.get('/protected', function (req, res) {
     }         
 });
 
-const hostname = '127.0.0.1';
-const port = 4071;
+const hostname = '0.0.0.0';
+const port = Number(process.env.PORT) || 10000;
 app.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);
 });
