@@ -19,7 +19,7 @@ const config = {
   authRequired: false,
   idpLogout: true, //logout not only from the app, but also from identity provider
   secret: process.env.SECRET,
-  baseURL: `http://${hostname}:${port}`,
+  baseURL: `https://prvi-projekt.onrender.com/`,
   clientID: process.env.CLIENT_ID,
   issuerBaseURL: 'https://fer-web2.eu.auth0.com',
   clientSecret: process.env.CLIENT_SECRET,
