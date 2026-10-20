@@ -1,0 +1,20 @@
+html     
+    head 
+        link(rel="stylesheet", href="/css/login.css")
+        title Simple JS for get data
+    body 
+        - var loginFormStyle = user ? 'none' : 'block';        
+        - var logoutButtonStyle = user ? 'block' : 'none';        
+        div(class="login-form", style="display:" + loginFormStyle)
+            h1 Login and get data
+            form(action="", method="post")
+                label(for="username") Username:
+                input(type="text", id="username", name="username", required) 
+                label(for="password") Password:
+                input(type="password", id="password", name="password", required)                 
+                input(type="button", id="btnLogin", value="Login") 
+        div(class="content-form")
+            input(type="button", id="btnLogout", value=("Logout " + (user && user.username ? user.username : "")), style="display: " + logoutButtonStyle) 
+            input(type="button", id="btnGetData", value="Get data") 
+        div(id="content")       
+        script(src="/js/site.js")
