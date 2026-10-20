@@ -7,6 +7,7 @@ import process from 'process';
 dotenv.config()
 
 const app = express();
+app.set('trust proxy', 1);
 app.set("views", path.join(import.meta.dirname, "views"));
 app.set('view engine', 'pug');
 app.use(express.static(path.join(import.meta.dirname, "public"))); //css and js are served as separate files (not included in pug)
@@ -21,14 +22,14 @@ const config = {
   secret: process.env.SESSION_SECRET,
   baseURL: `https://prvi-projekt.onrender.com`,
   clientID: process.env.CLIENT_ID,
-  issuerBaseURL: 'https://fer-web2.eu.auth0.com',
+  issuerBaseURL: 'https://dev-mf5rcnqao3kqzeaw.us.auth0.com',
   clientSecret: process.env.CLIENT_SECRET,
   routes: {
     logout: false as const // library registers GET /logout only; POST is used instead (see below)
   },
   authorizationParams: {
     response_type: 'code',
-    audience: 'FER-Web2 WebAPI',
+    audience: 'FER Web App',
     // offline_access is needed to get the refresh token ("Allow Offline Access" must be enabled for the API in Auth0)
     scope: 'openid profile email offline_access',
   },
