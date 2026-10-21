@@ -5,7 +5,6 @@ const { auth } = oidc;
 import dotenv from 'dotenv'
 import process from 'process';
 import { MongoClient } from 'mongodb';
-import { randomUUID } from 'crypto';
 dotenv.config()
 
 const app = express();
@@ -16,7 +15,6 @@ app.use(express.static(path.join(import.meta.dirname, "public"))); //css and js 
 
 const port = Number(process.env.PORT) || 4102;
 const hostname = '0.0.0.0'; // must match the callback URL registered in Auth0
-const webApiUri = process.env.WEB_API_URI || 'http://127.0.0.1:4101';
 
 const client = new MongoClient(process.env.MONGODB_URI!);
 await client.connect();
@@ -69,35 +67,6 @@ function requiresAuthApi(req: express.Request, res: express.Response, next: expr
     return;
   }
   next();
-}
-
-app.get('/bff/protected', requiresAuthApi, async function (req, res) {
-  try {
-    const accessToken = await getAccessToken(req);
-    const response = await fetch(`${webApiUri}/protected`, {
-      headers: { Authorization: `Bearer ${accessToken}` },
-      signal: AbortSignal.timeout(5000) // do not wait forever if web API does not respond
-    });
-    if (!response.ok) {
-      throw new Error(`Web API returned ${response.status}`);
-    }
-    res.json(await response.json());
-  }
-  catch (err) {
-    console.log(err);
-    res.status(502).send("Could not reach the protected resource");
-  }
-});
-
-async function getAccessToken(req: express.Request): Promise<string> {
-  let token = req.oidc.accessToken;
-  if (!token) {    
-    throw new Error("No access token in session");
-  }
-  if (token.isExpired()) {
-    token = await token.refresh();
-  }
-  return token.access_token;
 }
 
 app.listen(port, hostname, () => {    
