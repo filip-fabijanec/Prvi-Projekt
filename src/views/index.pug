@@ -1,7 +1,7 @@
 html
     head
         link(rel="stylesheet", href="/css/site.css")
-        title BFF demo
+        title Prvi Projekt
     body
         div(class="content-form")
             if username
@@ -11,6 +11,10 @@ html
             else
                 form(action="/login", method="get")
                     input(type="submit", id="btnLogin", value="Login")
-            input(type="button", id="btnGetData", value="Get data") 
+        h1 Propusnica
+        p Status: #{pass.status}
+        p Ime i prezime: #{pass.name}
+        p Dokument: #{pass.document}
+        p Izdano: #{pass.issuedAt.toISOString()}
         div(id="content")
         script(src="/js/site.js")
