@@ -1,7 +1,8 @@
 html
     head
+        meta(charset="utf-8")
         link(rel="stylesheet", href="/css/site.css")
-        title BFF demo
+        title Prvi Projekt
     body
         div(class="content-form")
             if username
@@ -11,6 +12,34 @@ html
             else
                 form(action="/login", method="get")
                     input(type="submit", id="btnLogin", value="Login")
-            input(type="button", id="btnGetData", value="Get data") 
+
+        main(class="passes")
+            h2 Propusnice
+            p Ukupno propusnica: #{total}
+            p Aktivnih propusnica: #{active}
+
+            if username
+                table
+                    thead
+                        tr
+                            th Ime
+                            th Dokument
+                            th Izdano
+                            th Status
+                            th Akcije
+                    tbody
+                        each p in passes
+                            tr
+                                td #{p.name}
+                                td #{p.document}
+                                td #{p.issuedAt.toISOString()}
+                                td #{p.status}
+                                td
+                                    if p.status === 'ACTIVE'
+                                        form(action=`/passes/${p.id}/cancel`, method="post")
+                                            input(type="submit", value="Poništi")
+                                    form(action=`/passes/${p.id}/delete`, method="post")
+                                        input(type="submit", value="Obriši", class="danger")
+
         div(id="content")
         script(src="/js/site.js")
