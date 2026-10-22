@@ -109,7 +109,7 @@ app.get('/passes/:id', requireAccessToken, requiredScopes('read:passes'), async 
     res.sendStatus(404);
     return;
   }
-  res.json({ id: p.id, name: p.name, document: p.document, issuedAt: p.issuedAt.toISOString(), status: p.status });
+  res.json({ id: p.id, name: p.name, document: p.document, issuedAt: p.issuedAt.toLocaleString('hr-HR'), status: p.status });
 });
 
 // Javna stranica za ljude (cilj QR koda)
