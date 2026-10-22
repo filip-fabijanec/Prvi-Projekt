@@ -74,7 +74,7 @@ app.get('/', async function (req, res) {
 const BASE_URL = process.env.BASE_URL!;
 
 // API za automat: izdavanje propusnice
-app.post('/passes', requireAccessToken, checkJwt, requiredScopes('create:passes'), express.json(), async (req, res) => {
+app.post('/passes', requireAccessToken, requiredScopes('create:passes'), express.json(), async (req, res) => {
   const name = typeof req.body?.name === 'string' ? req.body.name.trim() : '';
   const document = typeof req.body?.document === 'string' ? req.body.document.trim() : '';
   if (!name || !document) {
@@ -92,7 +92,7 @@ app.post('/passes', requireAccessToken, checkJwt, requiredScopes('create:passes'
 });
 
 // API za automat: dohvat propusnice
-app.get('/passes/:id', requireAccessToken, checkJwt, requiredScopes('read:passes'), async (req, res) => {
+app.get('/passes/:id', requireAccessToken, requiredScopes('read:passes'), async (req, res) => {
   const p = await passes.findOne({ id: req.params.id });
   if (!p) {
     res.sendStatus(404);
