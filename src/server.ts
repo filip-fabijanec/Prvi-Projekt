@@ -16,9 +16,8 @@ app.set("views", path.join(import.meta.dirname, "views"));
 app.set('view engine', 'pug');
 app.use(express.static(path.join(import.meta.dirname, "public"))); //css and js are served as separate files (not included in pug)
 const requireAccessToken = jwtAuth({
-  audience: 'https://fer-web-api',
-  issuerBaseURL: 'https://dev-mf5rcnqao3kqzeaw.us.auth0.com/',
-  tokenSigningAlg: 'RS256',
+  audience: process.env.AUDIENCE,
+  issuerBaseURL: process.env.ISSUER_BASE_URL,
 });
 const port = Number(process.env.PORT) || 4102;
 const hostname = '0.0.0.0'; // must match the callback URL registered in Auth0
@@ -32,16 +31,16 @@ const config = {
   authRequired: false,
   idpLogout: true, //logout not only from the app, but also from identity provider
   secret: process.env.SESSION_SECRET,
-  baseURL: `https://prvi-projekt.onrender.com`,
+  baseURL: process.env.BASE_URL,
   clientID: process.env.CLIENT_ID,
-  issuerBaseURL: 'https://dev-mf5rcnqao3kqzeaw.us.auth0.com',
+  issuerBaseURL: process.env.ISSUER_BASE_URL,
   clientSecret: process.env.CLIENT_SECRET,
   routes: {
     logout: false as const // library registers GET /logout only; POST is used instead (see below)
   },
   authorizationParams: {
     response_type: 'code',
-    audience: 'https://fer-web-api',
+    audience: process.env.AUDIENCE,
     // offline_access is needed to get the refresh token ("Allow Offline Access" must be enabled for the API in Auth0)
     scope: 'openid profile email offline_access',
   },
@@ -73,11 +72,6 @@ app.get('/', async function (req, res) {
 });
 
 const BASE_URL = process.env.BASE_URL!;
-
-const checkJwt = jwtAuth({
-  audience: process.env.AUDIENCE,
-  issuerBaseURL: process.env.ISSUER_BASE_URL,
-});
 
 // API za automat: izdavanje propusnice
 app.post('/passes', requireAccessToken, checkJwt, requiredScopes('create:passes'), express.json(), async (req, res) => {
