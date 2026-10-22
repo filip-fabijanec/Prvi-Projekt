@@ -21,7 +21,7 @@ const requireAccessToken = jwtAuth({
   tokenSigningAlg: 'RS256',
 });
 app.use(express.json());
-
+app.use(requireAccessToken)
 const port = Number(process.env.PORT) || 4102;
 const hostname = '0.0.0.0'; // must match the callback URL registered in Auth0
 
