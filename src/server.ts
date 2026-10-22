@@ -20,8 +20,6 @@ const requireAccessToken = jwtAuth({
   issuerBaseURL: 'https://dev-mf5rcnqao3kqzeaw.us.auth0.com/',
   tokenSigningAlg: 'RS256',
 });
-app.use(express.json());
-app.use(requireAccessToken)
 const port = Number(process.env.PORT) || 4102;
 const hostname = '0.0.0.0'; // must match the callback URL registered in Auth0
 
@@ -82,7 +80,7 @@ const checkJwt = jwtAuth({
 });
 
 // API za automat: izdavanje propusnice
-app.post('/passes', checkJwt, requiredScopes('create:passes'), express.json(), async (req, res) => {
+app.post('/passes', requireAccessToken, checkJwt, requiredScopes('create:passes'), express.json(), async (req, res) => {
   const name = typeof req.body?.name === 'string' ? req.body.name.trim() : '';
   const document = typeof req.body?.document === 'string' ? req.body.document.trim() : '';
   if (!name || !document) {
@@ -100,7 +98,7 @@ app.post('/passes', checkJwt, requiredScopes('create:passes'), express.json(), a
 });
 
 // API za automat: dohvat propusnice
-app.get('/passes/:id', checkJwt, requiredScopes('read:passes'), async (req, res) => {
+app.get('/passes/:id', requireAccessToken, checkJwt, requiredScopes('read:passes'), async (req, res) => {
   const p = await passes.findOne({ id: req.params.id });
   if (!p) {
     res.sendStatus(404);
