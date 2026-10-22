@@ -65,12 +65,23 @@ app.get('/', async function (req, res) {
   const total = await passes.countDocuments();
   const active = await passes.countDocuments({ status: 'ACTIVE' });
   let username: string | undefined;
+  let list: Pass[] = [];
   if (req.oidc.isAuthenticated()) {
     username = req.oidc.user?.name ?? req.oidc.user?.sub;
+    list = await passes.find().sort({ issuedAt: -1 }).toArray();
   }
-  res.render('index', { username, total, active });
+  res.render('index', { username, total, active, passes: list });
 });
 
+app.post('/passes/:id/cancel', requiresAuthApi, express.urlencoded({ extended: false }), async (req, res) => {
+  await passes.updateOne({ id: req.params.id }, { $set: { status: 'CANCELLED' } });
+  res.redirect('/');
+});
+
+app.post('/passes/:id/delete', requiresAuthApi, async (req, res) => {
+  await passes.deleteOne({ id: req.params.id });
+  res.redirect('/');
+});
 const BASE_URL = process.env.BASE_URL!;
 
 // API za automat: izdavanje propusnice

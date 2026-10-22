@@ -8,9 +8,29 @@ html
                 h1 Welcome #{username}
                 form(action="/logout", method="post")
                     input(type="submit", id="btnLogout", value="Logout")
+                table
+                tr
+                    th Ime
+                    th Dokument
+                    th Izdano
+                    th Status
+                    th
+                each p in passes
+                    tr
+                        td #{p.name}
+                        td #{p.document}
+                        td #{p.issuedAt.toISOString()}
+                        td #{p.status}
+                        td
+                            if p.status === 'ACTIVE'
+                                form(action=`/passes/${p.id}/cancel`, method="post", style="display:inline")
+                                    input(type="submit", value="Poništi")
+                            form(action=`/passes/${p.id}/delete`, method="post", style="display:inline")
+                                input(type="submit", value="Obriši")
             else
                 form(action="/login", method="get")
                     input(type="submit", id="btnLogin", value="Login")
+                
         h2 Propusnice
         p Ukupno propusnica: #{total}
         p Aktivnih propusnica: #{active}
