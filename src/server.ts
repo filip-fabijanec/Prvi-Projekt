@@ -20,18 +20,16 @@ const requireAccessToken = jwtAuth({
   issuerBaseURL: process.env.ISSUER_BASE_URL,
 });
 const port = Number(process.env.PORT) || 4102;
-const hostname = '0.0.0.0'; // must match the callback URL registered in Auth0
 
 const client = new MongoClient(process.env.MONGODB_URI!);
 await client.connect();
-
-
+const BASE_URL = process.env.BASE_URL!;
 
 const config = {
   authRequired: false,
   idpLogout: true, //logout not only from the app, but also from identity provider
   secret: process.env.SESSION_SECRET,
-  baseURL: process.env.BASE_URL,
+  baseURL: BASE_URL,
   clientID: process.env.CLIENT_ID,
   issuerBaseURL: process.env.ISSUER_BASE_URL,
   clientSecret: process.env.CLIENT_SECRET,
@@ -40,8 +38,6 @@ const config = {
   },
   authorizationParams: {
     response_type: 'code',
-    audience: process.env.AUDIENCE,
-    // offline_access is needed to get the refresh token ("Allow Offline Access" must be enabled for the API in Auth0)
     scope: 'openid profile email offline_access',
   },
 };
@@ -58,7 +54,6 @@ type Pass = {
 const passes = client.db('passes').collection<Pass>('passes');
 
 // logout changes state (removes session), so POST is used instead of GET
-// (otherwise any page could log the user out with a link or redirect - logout CSRF)
 app.post('/logout', (req, res) => res.oidc.logout());
 
 app.get('/', async function (req, res) {
@@ -68,12 +63,12 @@ app.get('/', async function (req, res) {
   let list: Pass[] = [];
   if (req.oidc.isAuthenticated()) {
     username = req.oidc.user?.name ?? req.oidc.user?.sub;
-    list = await passes.find().sort({ issuedAt: -1 }).toArray();
+    list = await passes.find().toArray();
   }
   res.render('index', { username, total, active, passes: list });
 });
 
-app.post('/passes/:id/cancel', requiresAuthApi, express.urlencoded({ extended: false }), async (req, res) => {
+app.post('/passes/:id/cancel', requiresAuthApi, async (req, res) => {
   await passes.updateOne({ id: req.params.id }, { $set: { status: 'CANCELLED' } });
   res.redirect('/');
 });
@@ -82,7 +77,6 @@ app.post('/passes/:id/delete', requiresAuthApi, async (req, res) => {
   await passes.deleteOne({ id: req.params.id });
   res.redirect('/');
 });
-const BASE_URL = process.env.BASE_URL!;
 
 // API za automat: izdavanje propusnice
 app.post('/passes', requireAccessToken, requiredScopes('create:passes'), express.json(), async (req, res) => {
@@ -109,7 +103,7 @@ app.get('/passes/:id', requireAccessToken, requiredScopes('read:passes'), async 
     res.sendStatus(404);
     return;
   }
-  res.json({ id: p.id, name: p.name, document: p.document, issuedAt: p.issuedAt.toLocaleString('hr-HR'), status: p.status });
+  res.json({ id: p.id, name: p.name, document: p.document, issuedAt: p.issuedAt.toISOString(), status: p.status });
 });
 
 // Javna stranica za ljude (cilj QR koda)
@@ -122,9 +116,6 @@ app.get('/info/:id', async (req, res) => {
   res.render('info', { pass: p });
 });
 
-// using requiresAuth() from express-openid-connect would redirect to the identity provider (302),
-// but fetch would follow redirect and fail due to CORS (IdP's /authorize is not an API).
-// BFF endpoints therefore return 401 and client decides what to do (e.g. go to /login)
 function requiresAuthApi(req: express.Request, res: express.Response, next: express.NextFunction) {
   if (!req.oidc.isAuthenticated()) {
     res.status(401).send("Not authenticated");
@@ -133,6 +124,4 @@ function requiresAuthApi(req: express.Request, res: express.Response, next: expr
   next();
 }
 
-app.listen(port, hostname, () => {    
-  console.log(`BFF running at http://${hostname}:${port}/`);
-});
+app.listen(port, '0.0.0.0');
