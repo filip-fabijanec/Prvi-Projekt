@@ -16,3 +16,37 @@
     color: #ffffff;
     margin-bottom: 15px;
 }
+
+.passes {
+  max-width: 900px;
+  margin: 24px auto;
+  padding: 0 16px;
+}
+
+.passes table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.passes th,
+.passes td {
+  padding: 8px 10px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
+
+.passes td form {
+  display: inline-block;
+  margin-right: 6px;
+}
+
+.passes td input[type="submit"] {
+  width: auto;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.passes td input.danger {
+  background: #b3261e;
+  color: #fff;
+}
