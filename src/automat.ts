@@ -7,7 +7,7 @@ export async function getToken(
   clientSecret: string,
   scope: string
 ): Promise<string> {
-  const response = await fetch(`${authority.replace(/\/+$/, '')}/oauth/token`, {
+  const response = await fetch(`${authority}/oauth/token`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: new URLSearchParams({
